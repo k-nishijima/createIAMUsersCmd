@@ -37,10 +37,13 @@ object CreateUsersMain extends App {
 
 	println("    success : %s" format(user))
 
-	iam.addUserToGroup(new AddUserToGroupRequest(groupName, userName))	
+	iam.addUserToGroup(new AddUserToGroupRequest(groupName, userName))
 	iam.createLoginProfile(new CreateLoginProfileRequest(userName, password))
 
-	f.println("%s,%s,%s" format(groupName, userName, password))
+	val createAccessKeyResult = iam.createAccessKey(new CreateAccessKeyRequest().withUserName(userName))
+	val keys = createAccessKeyResult.getAccessKey()
+
+	f.println("%s,%s,%s,%s,%s" format(groupName, userName, password, keys.getAccessKeyId(), keys.getSecretAccessKey()))
   }
 
   f.flush
